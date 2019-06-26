@@ -1,29 +1,32 @@
 package ueb05;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 class CorpusAnalyzer {
 	private List<String> theses;
 
 	CorpusAnalyzer(Iterator<String> thesesIterator) {
-		// TODO Alle Titel in die this.theses Liste übernehmen
+		while (thesesIterator.hasNext()){
+			theses.add(thesesIterator.next());
+		}
 	}
 
 	/**
 	 * Gibt die Anzahl der angefertigten Theses zurück
 	 */
 	int countTheses() {
-		throw new UnsupportedOperationException();
+		return theses.size();
 	}
 
 	/**
 	 * Gibt die durchschnittliche Länge von Titeln in Worten zurück
 	 */
 	int averageThesisTitleLength() {
-		throw new UnsupportedOperationException();
+		int n = 0;
+		for (String s : theses){
+			n += s.split(" ").length;
+		}
+		return n/theses.size();
 	}
 
 	/**
@@ -31,7 +34,15 @@ class CorpusAnalyzer {
 	 * Liste der ersten Wörter der Titel zurück.
 	 */
 	List<String> uniqueFirstWords() {
-		throw new UnsupportedOperationException();
+		Set <String> unique = new HashSet<>();
+		for(String s: theses){
+			unique.add(s.split(" ")[0]);
+		}
+		List <String> titel = new LinkedList<>();
+		titel.addAll(unique);
+		titel.sort(Collections.reverseOrder());
+
+		return titel;
 	}
 
 	/**
@@ -39,7 +50,21 @@ class CorpusAnalyzer {
 	 * in `blackList` vorkommen durch Sternchen ersetzt (so viele * wie Buchstaben).
 	 */
 	Iterator<String> censoredIterator(Set<String> blackList) {
-		throw new UnsupportedOperationException();
+		return new Iterator <String> (){
+			Iterator <String> it = theses.iterator();
+
+			public boolean hasNext(){
+				return it.hasNext();
+			}
+
+			public String next(){
+				String s = it.next();
+				for(String c: blackList){
+					s = s.replaceAll(c, repeat("*", c.length()));
+				}
+				return s;
+			}
+		};
 	}
 
 	/**
